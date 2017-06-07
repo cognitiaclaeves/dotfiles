@@ -1,1 +1,1 @@
-/Users/jnorment/dotfiles/pathogen-dl/autoload/pathogen.vim
+../../pathogen-dl/autoload/pathogen.vim
