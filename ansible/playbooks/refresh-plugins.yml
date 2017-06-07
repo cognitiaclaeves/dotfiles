@@ -10,6 +10,8 @@
         dest: '{{ df_home }}/{{ item.dest }}'
       with_items:
         - { 'nm': 'solarization', 'repo': 'https://github.com/altercation/solarized.git', 'dest': 'solarization' }
+        - { 'nm': 'pathogen', 'repo': 'https://github.com/tpope/vim-pathogen.git', 'dest': 'pathogen-dl' }
+
         - { 'nm': 'vim:syntastic', 'repo': 'https://github.com/vim-syntastic/syntastic.git', 'dest': '.vim/bundle/syntastic' }
         - { 'nm': 'vim:vim-obsession', 'repo': 'https://github.com/tpope/vim-obsession.git', 'dest': '.vim/bundle/vim-obsession' }
       loop_control:
@@ -21,7 +23,11 @@
         src: '{{ item.src }}'
         state: link
       with_items:
-        - { 'src': '{{ df_home }}/solarization/vim-colors-solarized', 'path': '{{ df_home }}/.vim/bundle/vim-colors-solarized' }
+        - { 'nm': 'pathogen', 'src': '{{ df_home }}/pathogen-dl/autoload/pathogen.vim', 'path': '{{ df_home }}/.vim/autoload/pathogen.vim' } 
+        - { 'nm': 'vim-solarized-lt', 'src': '{{ df_home }}/solarization/vim-colors-solarized', 'path': '{{ df_home }}/.vim/bundle/vim-colors-solarized' }
+      loop_control:
+        label: '{{ item.nm }}'
+
 
     - name: Manage solarization file for tmux - light
       blockinfile:
@@ -31,6 +37,32 @@
       with_items:
         - { 'nm': 'laptop', 'path': '{{ df_home }}/tmux-conf-laptop.conf' }
         - { 'nm': 'jump', 'path': '{{ df_home }}/tmux-conf-jump.conf' }
+      loop_control:
+        label: '{{ item.nm }}'
+
+    - name: Manage pathogen block
+      blockinfile:
+          dest: '{{ item.path }}'
+          marker: '" # ANSIBLE MGD: PATHOGEN'
+          block: | 
+            execute pathogen#infect()
+            syntax on
+            filetype plugin indent on
+      with_items:
+        - { 'nm': 'pathogen .vimrc block', 'path': '{{ df_home }}/.vimrc' }
+      loop_control:
+        label: '{{ item.nm }}'
+
+    - name: Manage solarized
+      blockinfile:
+          dest: '{{ item.path }}'
+          marker: '" # ANSIBLE MGD: SOLARIZED'
+          block: | 
+            syntax enable
+            set background=light
+            colorscheme solarized
+      with_items:
+        - { 'nm': 'solarized .vimrc block', 'path': '{{ df_home }}/.vimrc' }
       loop_control:
         label: '{{ item.nm }}'
 

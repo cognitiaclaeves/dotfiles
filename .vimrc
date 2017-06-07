@@ -1,5 +1,16 @@
 set nocp
+
+" # ANSIBLE MGD: PATHOGEN
 execute pathogen#infect()
+syntax on
+filetype plugin indent on
+" # ANSIBLE MGD: PATHOGEN
+
+" # ANSIBLE MGD: SOLARIZED
+syntax enable
+set background=light
+colorscheme solarized
+" # ANSIBLE MGD: SOLARIZED
 
 " use spaces instead of tabs
 set expandtab
@@ -12,13 +23,6 @@ set softtabstop=4
 set shiftwidth=4
 
 set number
-
-syntax on
-filetype plugin indent on
-
-syntax enable
-set background=light
-colorscheme solarized
 
 let g:syntastic_check_on_open = 1
 
