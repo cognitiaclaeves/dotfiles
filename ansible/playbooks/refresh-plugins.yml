@@ -32,8 +32,10 @@
         - { 'nm': 'tmux:tpm', 'repo': 'https://github.com/tmux-plugins/tpm', 'dest': '.tmux/plugins/tpm' }
         - { 'nm': 'tmux:sensible', 'repo': 'https://github.com/tmux-plugins/tmux-sensible', 'dest': '.tmux/plugins/tmux-sensible' }
         - { 'nm': 'tmux:resurrect', 'repo': 'https://github.com/tmux-plugins/tmux-resurrect', 'dest': '.tmux/plugins/tmux-resurrect' }
-        # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
+        - { 'nm': 'tmux:solarized', 'repo': 'https://github.com/seebi/tmux-colors-solarized.git', 'dest': '.tmux/plugins/tmux-colors-solarized' }
+            # altercation/solarized is not up-to-date with changes in seebi/tmux-colors-solarized
         - { 'nm': 'tmux:continuum', 'repo': 'https://github.com/tmux-plugins/tmux-continuum', 'dest': '.tmux/plugins/tmux-continuum' }
+        # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
 
 
 
@@ -48,11 +50,13 @@
       with_items:
         - { 'nm': 'pathogen', 'src': '{{ df_home }}/pathogen-dl/autoload/pathogen.vim', 'path': '{{ df_home }}/.vim/autoload/pathogen.vim' } 
         - { 'nm': 'vim-solarized-lt', 'src': '{{ df_home }}/solarization/vim-colors-solarized', 'path': '{{ df_home }}/.vim/bundle/vim-colors-solarized' }
+        # - { 'nm': 'tmux-solarized-lt', 'src': '{{ df_home }}/solarization/tmux', 'path': '{{ df_home }}/.tmux/plugins/tmux-colors-solarized' }
+        # solarized repo is not updated with tmux-colors-solarized
       loop_control:
         label: '{{ item.nm }}'
 
 
-    - name: Manage solarization file for tmux - light
+    - name: Manage default solarization color scheme for tmux
       blockinfile:
         dest: '{{ item.path }}'
         block: |
@@ -76,7 +80,7 @@
       loop_control:
         label: '{{ item.nm }}'
 
-    - name: Manage solarized
+    - name: Manage solarized vim
       blockinfile:
           dest: '{{ item.path }}'
           marker: '" ## {mark} ANSIBLE MGD: SOLARIZED'
@@ -88,19 +92,6 @@
         - { 'nm': 'solarized .vimrc block', 'path': '{{ df_home }}/.vimrc' }
       loop_control:
         label: '{{ item.nm }}'
-
-#    - name: Manage tmux-resurrect
-#      blockinfile:
-#          dest: '{{ item.path }}'
-#          marker: '" ## {mark} ANSIBLE MGD: PATHOGEN'
-#          block: | 
-#            execute pathogen#infect()
-#            syntax on
-#            filetype plugin indent on
-#      with_items:
-#        - { 'nm': 'pathogen .vimrc block', 'path': '{{ df_home }}/.vimrc' }
-#      loop_control:
-#        label: '{{ item.nm }}'
 
     - name: Finish vim-obsession install
       command: 'vim -u NONE -c "helptags vim-obsession/doc" -c q'
