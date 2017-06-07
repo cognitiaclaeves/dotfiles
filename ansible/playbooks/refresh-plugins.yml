@@ -4,16 +4,39 @@
   vars:
     df_home: '~/dotfiles'
   tasks:
+
+#    - name: Show OS
+#      debug:
+#        var: ansible_distribution
+#
+    - name: Handle system dependencies
+      package:
+        name: '{{ item }}'
+        state: latest
+      with_items:
+        - pylint
+        - pyflakes
+        - python-flake8
+      when: ansible_distribution != 'MacOSX'
+
     - name: Clone live plugins
       git:
         repo:  '{{ item.repo }}'
         dest: '{{ df_home }}/{{ item.dest }}'
       with_items:
         - { 'nm': 'solarization', 'repo': 'https://github.com/altercation/solarized.git', 'dest': 'solarization' }
-        - { 'nm': 'pathogen', 'repo': 'https://github.com/tpope/vim-pathogen.git', 'dest': 'pathogen-dl' }
-
+        - { 'nm': 'vim:pathogen', 'repo': 'https://github.com/tpope/vim-pathogen.git', 'dest': 'pathogen-dl' }
+        - { 'nm': 'vim:sensible', 'repo': 'https://github.com/tpope/vim-sensible.git', 'dest': '.vim/bundle/vim-sensible' }
         - { 'nm': 'vim:syntastic', 'repo': 'https://github.com/vim-syntastic/syntastic.git', 'dest': '.vim/bundle/syntastic' }
         - { 'nm': 'vim:vim-obsession', 'repo': 'https://github.com/tpope/vim-obsession.git', 'dest': '.vim/bundle/vim-obsession' }
+        - { 'nm': 'tmux:tpm', 'repo': 'https://github.com/tmux-plugins/tpm', 'dest': '.tmux/plugins/tpm' }
+        - { 'nm': 'tmux:sensible', 'repo': 'https://github.com/tmux-plugins/tmux-sensible', 'dest': '.tmux/plugins/tmux-sensible' }
+        - { 'nm': 'tmux:resurrect', 'repo': 'https://github.com/tmux-plugins/tmux-resurrect', 'dest': '.tmux/plugins/tmux-resurrect' }
+        # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
+        - { 'nm': 'tmux:continuum', 'repo': 'https://github.com/tmux-plugins/tmux-continuum', 'dest': '.tmux/plugins/tmux-continuum' }
+
+
+
       loop_control:
         label: '{{ item.nm }}'
 
@@ -43,7 +66,7 @@
     - name: Manage pathogen block
       blockinfile:
           dest: '{{ item.path }}'
-          marker: '" # ANSIBLE MGD: PATHOGEN'
+          marker: '" ## {mark} ANSIBLE MGD: PATHOGEN'
           block: | 
             execute pathogen#infect()
             syntax on
@@ -56,7 +79,7 @@
     - name: Manage solarized
       blockinfile:
           dest: '{{ item.path }}'
-          marker: '" # ANSIBLE MGD: SOLARIZED'
+          marker: '" ## {mark} ANSIBLE MGD: SOLARIZED'
           block: | 
             syntax enable
             set background=light
@@ -65,6 +88,19 @@
         - { 'nm': 'solarized .vimrc block', 'path': '{{ df_home }}/.vimrc' }
       loop_control:
         label: '{{ item.nm }}'
+
+#    - name: Manage tmux-resurrect
+#      blockinfile:
+#          dest: '{{ item.path }}'
+#          marker: '" ## {mark} ANSIBLE MGD: PATHOGEN'
+#          block: | 
+#            execute pathogen#infect()
+#            syntax on
+#            filetype plugin indent on
+#      with_items:
+#        - { 'nm': 'pathogen .vimrc block', 'path': '{{ df_home }}/.vimrc' }
+#      loop_control:
+#        label: '{{ item.nm }}'
 
     - name: Finish vim-obsession install
       command: 'vim -u NONE -c "helptags vim-obsession/doc" -c q'
