@@ -36,9 +36,6 @@
             # altercation/solarized is not up-to-date with changes in seebi/tmux-colors-solarized
         - { 'nm': 'tmux:continuum', 'repo': 'https://github.com/tmux-plugins/tmux-continuum', 'dest': '.tmux/plugins/tmux-continuum' }
         # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
-
-
-
       loop_control:
         label: '{{ item.nm }}'
 
