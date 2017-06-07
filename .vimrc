@@ -16,6 +16,10 @@ set number
 syntax on
 filetype plugin indent on
 
+syntax enable
+set background=light
+colorscheme solarized
+
 let g:syntastic_check_on_open = 1
 
 "set statusline+=%#warningmsg#

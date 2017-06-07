@@ -1,0 +1,39 @@
+---
+
+- hosts: localhost
+  vars:
+    df_home: '~/dotfiles'
+  tasks:
+    - name: Clone live plugins
+      git:
+        repo:  '{{ item.repo }}'
+        dest: '{{ df_home }}/{{ item.dest }}'
+      with_items:
+        - { 'nm': 'solarization', 'repo': 'https://github.com/altercation/solarized.git', 'dest': 'solarization' }
+        - { 'nm': 'vim:syntastic', 'repo': 'https://github.com/vim-syntastic/syntastic.git', 'dest': '.vim/bundle/syntastic' }
+        - { 'nm': 'vim:vim-obsession', 'repo': 'https://github.com/tpope/vim-obsession.git', 'dest': '.vim/bundle/vim-obsession' }
+      loop_control:
+        label: '{{ item.nm }}'
+
+    - name: Link as necessary
+      file:
+        path: '{{ item.path }}'
+        src: '{{ item.src }}'
+        state: link
+      with_items:
+        - { 'src': '{{ df_home }}/solarization/vim-colors-solarized', 'path': '{{ df_home }}/.vim/bundle/vim-colors-solarized' }
+
+    - name: Manage solarization file for tmux - light
+      blockinfile:
+        dest: '{{ item.path }}'
+        block: |
+            {{ lookup( 'file', '{{ df_home }}/solarization/tmux/tmuxcolors-light.conf' ) }}
+      with_items:
+        - { 'nm': 'laptop', 'path': '{{ df_home }}/tmux-conf-laptop.conf' }
+        - { 'nm': 'jump', 'path': '{{ df_home }}/tmux-conf-jump.conf' }
+      loop_control:
+        label: '{{ item.nm }}'
+
+    - name: Finish vim-obsession install
+      command: 'vim -u NONE -c "helptags vim-obsession/doc" -c q'
+
