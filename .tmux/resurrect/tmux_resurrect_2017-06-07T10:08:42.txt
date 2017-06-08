@@ -1,5 +1,0 @@
-pane	0	0	:vim	1	:*	0	:/Users/jnorment	1	vim	:vim /Users/jnorment/.tmux.conf
-pane	0	0	:vim	1	:*	1	:/Users/jnorment	0	bash	:
-pane	0	0	:vim	1	:*	2	:/Users/jnorment	0	bash	:
-window	0	0	1	:*	a133,146x29,0,0[146x14,0,0,1,146x14,0,15{73x14,0,15,2,72x14,74,15,3}]
-state	0	
