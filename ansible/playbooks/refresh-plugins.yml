@@ -120,7 +120,7 @@
     - name: Manage default solarization color scheme for tmux
       blockinfile:
         dest: '{{ item.path }}'
-        marker: '" ## {mark} ANSIBLE MGD: SOLARIZATION COLORS'
+        marker: '"## {mark} ANSIBLE MGD: SOLARIZATION COLORS'
         block: |
             {{ lookup( 'file', '{{ df_home }}/solarization/tmux/tmuxcolors-light.conf' ) }}
       # TODO: Change to manage both dark and light options

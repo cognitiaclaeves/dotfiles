@@ -1,4 +1,0 @@
-pane	0	0	:bash	1	:*Z	0	:/Users/jason.norment/deprecated/dotfiles_new	0	bash	:
-pane	0	0	:bash	1	:*Z	1	:/Users/jason.norment/dotfiles/ansible	1	bash	:vim ansible/playbooks/refresh-plugins.yml
-window	0	0	1	:*Z	42b4,147x39,0,0[147x20,0,0,0,147x18,0,21,1]
-state	0	
