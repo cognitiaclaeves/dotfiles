@@ -35,3 +35,4 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_wq = 0
 
+let g:flake8_cmd="/Users/jason.norment/.venv/py3/bin/flake8"
