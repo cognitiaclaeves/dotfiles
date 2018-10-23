@@ -27,6 +27,68 @@
 
       # This is a handy shortcut for default python in linux .. better alternative is to use pip environment
 
+
+    - name: Check that .vim exists
+      stat:
+        path: '{{ df_home }}/.vim'
+      register: vim_stat_result
+
+    - name: Check that .tmux exists
+      stat:
+        path: '{{ df_home }}/.tmux'
+      register: tmux_stat_result
+
+    - name: Ensure .vim and .tmux exist
+      file:
+        path: '{{ item.src }}'
+        state: directory
+      with_items:
+        - { 'nm': '.vim', 'src': '{{ df_home }}/.vim', 'path': '~/.vim' }
+        - { 'nm': '.vim', 'src': '{{ df_home }}/.vim/autoload', 'path': '~/.vim/autoload' } # '{{ df_home }}/.vim/autoload
+        
+        - { 'nm': '.tmux', 'src': '{{ df_home }}/.tmux', 'path': '~/.tmux' }
+      loop_control:
+        label: '{{ item.nm }}'
+
+    - name: Clone live .tmux plugins (if dotfiles/.tmux not present)
+      git:
+        repo:  '{{ item.repo }}'
+        dest: '{{ df_home }}/{{ item.dest }}'
+        # git appears to be kinda broken. Not really idempotent. git directory must not exist for this to work.
+      with_items:
+        - { 'nm': 'solarization', 'repo': 'https://github.com/altercation/solarized.git', 'dest': 'solarization' }
+        # TODO: Solarization is actually meant for both tmux and vim
+        - { 'nm': 'tmux:tpm', 'repo': 'https://github.com/tmux-plugins/tpm', 'dest': '.tmux/plugins/tpm' }
+        - { 'nm': 'tmux:sensible', 'repo': 'https://github.com/tmux-plugins/tmux-sensible', 'dest': '.tmux/plugins/tmux-sensible' }
+        - { 'nm': 'tmux:resurrect', 'repo': 'https://github.com/tmux-plugins/tmux-resurrect', 'dest': '.tmux/plugins/tmux-resurrect' }
+        - { 'nm': 'tmux:solarized', 'repo': 'https://github.com/seebi/tmux-colors-solarized.git', 'dest': '.tmux/plugins/tmux-colors-solarized' }
+        # altercation/solarized is not up-to-date with changes in seebi/tmux-colors-solarized
+        - { 'nm': 'tmux:continuum', 'repo': 'https://github.com/tmux-plugins/tmux-continuum', 'dest': '.tmux/plugins/tmux-continuum' }
+        # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
+      loop_control:
+        label: '{{ item.nm }}'
+      when: not tmux_stat_result.stat.exists 
+      ignore_errors: yes
+
+    #- debug:
+    #     var: tmux_stat_result
+
+    - name: Clone live .vim plugins (if dotfiles/.vim not present)
+      git:
+        repo:  '{{ item.repo }}'
+        dest: '{{ df_home }}/{{ item.dest }}'
+        # git appears to be kinda broken. Not really idempotent. git directory must not exist for this to work.
+      with_items:
+        - { 'nm': 'vim:pathogen', 'repo': 'https://github.com/tpope/vim-pathogen.git', 'dest': 'pathogen-dl' }
+        - { 'nm': 'vim:sensible', 'repo': 'https://github.com/tpope/vim-sensible.git', 'dest': '.vim/bundle/vim-sensible' }
+        - { 'nm': 'vim:flake8', 'repo': 'https://github.com/nvie/vim-flake8.git', 'dest': '.vim/bundle/vim-flake8' }
+        - { 'nm': 'vim:syntastic', 'repo': 'https://github.com/vim-syntastic/syntastic.git', 'dest': '.vim/bundle/syntastic' }
+        - { 'nm': 'vim:vim-obsession', 'repo': 'https://github.com/tpope/vim-obsession.git', 'dest': '.vim/bundle/vim-obsession' }
+      loop_control:
+        label: '{{ item.nm }}'
+      when: not vim_stat_result.stat.exists
+      ignore_errors: yes
+
     - name: Link as .dotfiles and .dotdirs
       file:
         path: '{{ item.path }}'
@@ -37,32 +99,10 @@
         - { 'nm': '.vim', 'src': '{{ df_home }}/.vim', 'path': '~/.vim' }
         - { 'nm': '.tmux.conf', 'src': '{{ default_tmux_config }}', 'path': '~/.tmux.conf' }
         - { 'nm': '.tmux', 'src': '{{ df_home }}/.tmux', 'path': '~/.tmux' }
-     
       loop_control:
         label: '{{ item.nm }}'
 
-
-    - name: Clone live plugins
-      git:
-        repo:  '{{ item.repo }}'
-        dest: '{{ df_home }}/{{ item.dest }}'
-      with_items:
-        - { 'nm': 'solarization', 'repo': 'https://github.com/altercation/solarized.git', 'dest': 'solarization' }
-        - { 'nm': 'vim:pathogen', 'repo': 'https://github.com/tpope/vim-pathogen.git', 'dest': 'pathogen-dl' }
-        - { 'nm': 'vim:sensible', 'repo': 'https://github.com/tpope/vim-sensible.git', 'dest': '.vim/bundle/vim-sensible' }
-        - { 'nm': 'vim:syntastic', 'repo': 'https://github.com/vim-syntastic/syntastic.git', 'dest': '.vim/bundle/syntastic' }
-        - { 'nm': 'vim:vim-obsession', 'repo': 'https://github.com/tpope/vim-obsession.git', 'dest': '.vim/bundle/vim-obsession' }
-        - { 'nm': 'tmux:tpm', 'repo': 'https://github.com/tmux-plugins/tpm', 'dest': '.tmux/plugins/tpm' }
-        - { 'nm': 'tmux:sensible', 'repo': 'https://github.com/tmux-plugins/tmux-sensible', 'dest': '.tmux/plugins/tmux-sensible' }
-        - { 'nm': 'tmux:resurrect', 'repo': 'https://github.com/tmux-plugins/tmux-resurrect', 'dest': '.tmux/plugins/tmux-resurrect' }
-        - { 'nm': 'tmux:solarized', 'repo': 'https://github.com/seebi/tmux-colors-solarized.git', 'dest': '.tmux/plugins/tmux-colors-solarized' }
-            # altercation/solarized is not up-to-date with changes in seebi/tmux-colors-solarized
-        - { 'nm': 'tmux:continuum', 'repo': 'https://github.com/tmux-plugins/tmux-continuum', 'dest': '.tmux/plugins/tmux-continuum' }
-        # meh - { 'nm': 'tmux:sidebar', 'repo': 'https://github.com/tmux-plugins/tmux-sidebar', 'dest': '.tmux/plugins/tmux-sidebar' }
-      loop_control:
-        label: '{{ item.nm }}'
-
-    - name: Link as necessary
+    - name: Link internally, as necessary
       file:
         path: '{{ item.path }}'
         src: '{{ item.src }}'
@@ -80,10 +120,10 @@
     - name: Manage default solarization color scheme for tmux
       blockinfile:
         dest: '{{ item.path }}'
-          marker: '" ## {mark} ANSIBLE MGD: SOLARIZATION COLORS'
+        marker: '" ## {mark} ANSIBLE MGD: SOLARIZATION COLORS'
         block: |
             {{ lookup( 'file', '{{ df_home }}/solarization/tmux/tmuxcolors-light.conf' ) }}
-			# TODO: Change to manage both dark and light options
+      # TODO: Change to manage both dark and light options
       with_items:
         - { 'nm': 'laptop', 'path': '{{ df_home }}/tmux-conf-laptop.conf' }
         - { 'nm': 'laptop', 'path': '{{ df_home }}/tmux-conf-laptop-light.conf' }
@@ -127,6 +167,7 @@
         - { 'nm': 'flake8 .vimrc block', 'path': '{{ df_home }}/.vimrc' }
       loop_control:
         label: '{{ item.nm }}'
+      when: ansible_distribution == 'MacOSX'
 
     - name: Finish vim-obsession install
       command: 'vim -u NONE -c "helptags vim-obsession/doc" -c q'

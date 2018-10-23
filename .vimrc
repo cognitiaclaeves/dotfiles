@@ -36,3 +36,6 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_wq = 0
 
 let g:flake8_cmd="/Users/jason.norment/.venv/py3/bin/flake8"
+" ## BEGIN ANSIBLE MGD: FLAKE8
+let g:flake8_cmd="~/.venv/py3_flake8/bin/flake8" 
+" ## END ANSIBLE MGD: FLAKE8
