@@ -1,16 +1,16 @@
 set nocp
 
-" ## BEGIN ANSIBLE MGD: PATHOGEN
+## BEGIN ANSIBLE MGD: PATHOGEN
 execute pathogen#infect()
 syntax on
 filetype plugin indent on
-" ## END ANSIBLE MGD: PATHOGEN
+## END ANSIBLE MGD: PATHOGEN
 
-" ## BEGIN ANSIBLE MGD: SOLARIZED
+## BEGIN ANSIBLE MGD: SOLARIZED
 syntax enable
 set background=light
 colorscheme solarized
-" ## END ANSIBLE MGD: SOLARIZED
+## END ANSIBLE MGD: SOLARIZED
 
 
 " use spaces instead of tabs
@@ -35,7 +35,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_wq = 0
 
-let g:flake8_cmd="/Users/jason.norment/.venv/py3/bin/flake8"
-" ## BEGIN ANSIBLE MGD: FLAKE8
+## BEGIN ANSIBLE MGD: FLAKE8
 let g:flake8_cmd="~/.venv/py3_flake8/bin/flake8" 
-" ## END ANSIBLE MGD: FLAKE8
+## END ANSIBLE MGD: FLAKE8
+
