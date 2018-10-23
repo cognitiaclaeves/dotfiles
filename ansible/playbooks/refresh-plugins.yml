@@ -134,7 +134,7 @@
     - name: Manage vim pathogen block
       blockinfile:
           dest: '{{ item.path }}'
-          marker: '## {mark} ANSIBLE MGD: PATHOGEN'
+          marker: '"## {mark} ANSIBLE MGD: PATHOGEN'
           block: | 
             execute pathogen#infect()
             syntax on
@@ -147,7 +147,7 @@
     - name: Manage vim solarized colors
       blockinfile:
           dest: '{{ item.path }}'
-          marker: '## {mark} ANSIBLE MGD: SOLARIZED'
+          marker: '"## {mark} ANSIBLE MGD: SOLARIZED'
           block: | 
             syntax enable
             set background=light
@@ -160,7 +160,7 @@
     - name: Manage vim flake8
       blockinfile:
           dest: '{{ item.path }}'
-          marker: '## {mark} ANSIBLE MGD: FLAKE8'
+          marker: '"## {mark} ANSIBLE MGD: FLAKE8'
           block: | 
             let g:flake8_cmd="{{ pyenv_home }}/bin/flake8" 
       with_items:
