@@ -39,3 +39,6 @@ let g:syntastic_check_on_wq = 0
 let g:flake8_cmd="~/.venv/py3_flake8/bin/flake8" 
 "## END ANSIBLE MGD: FLAKE8
 
+"## BEGIN ANSIBLE MGD: GROOVY
+au BufNewFile,BufRead Jenkinsfile setf groovy
+"## END ANSIBLE MGD: GROOVY

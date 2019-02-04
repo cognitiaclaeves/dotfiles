@@ -169,6 +169,18 @@
         label: '{{ item.nm }}'
       when: ansible_distribution == 'MacOSX'
 
+    - name: Manage vim groovy
+      blockinfile:
+          dest: '{{ item.path }}'
+          marker: '"## {mark} ANSIBLE MGD: GROOVY'
+          block: | 
+            au BufNewFile,BufRead Jenkinsfile setf groovy
+      with_items:
+        - { 'nm': 'groovy .vimrc block', 'path': '{{ df_home }}/.vimrc' }
+      loop_control:
+        label: '{{ item.nm }}'
+      when: ansible_distribution == 'MacOSX'
+
     - name: Finish vim-obsession install
       command: 'vim -u NONE -c "helptags vim-obsession/doc" -c q'
 
