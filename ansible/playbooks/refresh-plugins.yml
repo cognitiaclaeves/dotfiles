@@ -89,6 +89,10 @@
       when: not vim_stat_result.stat.exists
       ignore_errors: yes
 
+    - name: Warn of missing files
+      debug:
+        msg: "Warning- If files are not present, copy from .. to ~/dotfiles ..."
+
     - name: Link as .dotfiles and .dotdirs
       file:
         path: '{{ item.path }}'
